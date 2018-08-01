@@ -11,16 +11,16 @@
                     <a target="_blank" href="#"></a>
                 </div>
                 <div id="menu" class="right-box">
-                    <span style="display: none;">
-                        <a href="" class="">登录</a>
+                    <span v-if="!$store.state.isLogin">
+                        <router-link to="/login">登录</router-link>
                         <strong>|</strong>
                         <a href="" class="">注册</a>
                         <strong>|</strong>
                     </span>
-                    <span>
+                    <span v-if="$store.state.isLogin">
                         <a href="" class="">会员中心</a>
                         <strong>|</strong>
-                        <a>退出</a>
+                        <a @click="logout">退出</a>
                         <strong>|</strong>
                     </span>
                     <router-link to="/buyCar">
@@ -157,6 +157,24 @@ export default {
   // 创建出来声明周期函数
   created(){
       console.log(this.$store);
+  },
+  methods:{
+      logout(){
+          this.axios.get("/site/account/logout")
+          .then(response=>{
+            //   console.log(response);
+            if(response.data.status==0){
+                this.$Message.success(response.data.message);
+                // 跳页面
+                this.$router.push('/');
+                // 修改vuex中的值
+                this.$store.commit('changeLogin',false);
+            }
+          })
+          .catch(err=>{
+
+          })
+      }
   }
 };
 

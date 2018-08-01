@@ -6,6 +6,8 @@ import VueRouter from "vue-router";
 import index from "./components/index.vue";
 import goodsInfo from './components/goodsInfo.vue';
 import buyCar from './components/buyCar.vue';
+import payOrder from './components/payOrder.vue';
+import login from './components/login.vue';
 // 导入ui框架
 import ElementUI from "element-ui";
 // 导入css
@@ -29,6 +31,8 @@ import Vuex from 'vuex'
 
 // 正常的服务器
 axios.defaults.baseURL = 'http://47.106.148.205:8899';
+//让ajax携带cookie
+axios.defaults.withCredentials=true;
 // 崩溃后的备用服务器
 // axios.defaults.baseURL = 'http://127.0.0.1:8848';
 // 挂载到Vue的原型上->Vue实例化出来的对象 共用 vue-resource this.$http
@@ -71,9 +75,21 @@ const router = new VueRouter({
     {
       path: "/buyCar",
       component: buyCar
+    },
+    // 订单支付路由
+    {
+      path:"/payOrder",
+      component:payOrder
+    },
+    // 登陆路由
+    {
+      path:'/login',
+      component:login
     }
   ]
 });
+
+
 
 
 // 注册全局过滤器
@@ -90,7 +106,10 @@ const store = new Vuex.Store({
   state: {
     // 数量
     // buyList: {}
-    buyList
+    buyList,
+    isLogin:false,
+    // 来时的路由
+    fromPath:"/"
   },
   // 类似于computed的属性
   getters: {
@@ -119,7 +138,51 @@ const store = new Vuex.Store({
         // 需要使用 Vue.set(obj, 'newProp', 123) 替代
         Vue.set(state.buyList, info.goodId, parseInt(info.goodNum));
       }
+    },
+    // 直接修改数值的方法
+    changeNum(state,info){
+      state.buyList[info.goodId] = info.goodNum;
+    },
+    // 删除数据
+    delGoodById(state,id){
+      // 使用Vue的方法来删除 
+      Vue.delete(state.buyList,id);
+    },
+    // 修改登陆状态
+    changeLogin(state,login){
+      state.isLogin = login;
+    },
+    // 保存来时的路由
+    saveFromPath(state,fromPath){
+      state.fromPath = fromPath;
     }
+  }
+})
+
+// beforeEach 可以当做一个回调函数 不是立刻触发 所以这里顺序不调整是可以的
+router.beforeEach((to, from, next) => {
+  // 保存来时的路由
+  store.commit('saveFromPath',from.path);
+
+  // from 从哪来 to 去哪里 next()下一个
+  if(to.path=='/payOrder'){
+    // 判断
+    axios.get("/site/account/islogin")
+    .then(response=>{
+      // console.log(response);
+      if(response.data.code=='nologin'){
+        // 去登录页
+        // console.log('登录页')
+        next('/login')
+      }else{
+        next();
+      }
+    })
+    .catch(err=>{
+
+    })
+  }else{
+    next();
   }
 })
 
