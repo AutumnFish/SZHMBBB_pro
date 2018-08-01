@@ -156,13 +156,13 @@ export default {
   },
   // 创建出来声明周期函数
   created(){
-      console.log(this.$store);
+      // console.log(this.$store);
   },
   methods:{
       logout(){
           this.axios.get("/site/account/logout")
           .then(response=>{
-            //   console.log(response);
+            //   // console.log(response);
             if(response.data.status==0){
                 this.$Message.success(response.data.message);
                 // 跳页面

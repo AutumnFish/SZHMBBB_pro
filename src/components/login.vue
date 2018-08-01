@@ -47,7 +47,7 @@ export default {
                 user_name:this.userName,
                 password:this.password
             }).then(response=>{
-                // console.log(response);
+                // // console.log(response);
                 if(response.data.status==0){
                     this.$Message.success(response.data.message);
                     // 调用vuex中的方法
@@ -58,7 +58,7 @@ export default {
                     this.$Message.error(response.data.message);
                 }
             }).catch(err=>{
-                console.log(err);
+                // console.log(err);
             })
         }
     }

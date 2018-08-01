@@ -8,6 +8,7 @@ import goodsInfo from './components/goodsInfo.vue';
 import buyCar from './components/buyCar.vue';
 import payOrder from './components/payOrder.vue';
 import login from './components/login.vue';
+import orderInfo from './components/orderInfo.vue';
 // 导入ui框架
 import ElementUI from "element-ui";
 // 导入css
@@ -77,14 +78,20 @@ const router = new VueRouter({
       component: buyCar
     },
     // 订单支付路由
+    // 动态路由匹配
     {
-      path:"/payOrder",
+      path:"/payOrder/:ids",
       component:payOrder
     },
     // 登陆路由
     {
       path:'/login',
       component:login
+    },
+    // 订单详情路由
+    {
+      path:"/orderInfo/:orderid",
+      component:orderInfo
     }
   ]
 });
@@ -169,10 +176,10 @@ router.beforeEach((to, from, next) => {
     // 判断
     axios.get("/site/account/islogin")
     .then(response=>{
-      // console.log(response);
+      // // console.log(response);
       if(response.data.code=='nologin'){
         // 去登录页
-        // console.log('登录页')
+        // // console.log('登录页')
         next('/login')
       }else{
         next();
@@ -197,7 +204,24 @@ new Vue({
   // 渲染 App组件
   render: h => h(App),
   // 挂载仓库
-  store
+  store,
+  // 生命周期函数
+  beforeCreate(){
+    // console.log('app-beforeCreate');
+    axios.get('/site/account/islogin')
+    .then(response=>{
+      // console.log(response);
+      // if(response.data.code=='logined')
+      store.state.isLogin = response.data.code=='logined';
+    })
+    .catch(err=>{
+      // console.log(err);
+    })
+  },
+  created(){
+    // console.log('app-created');
+  }
+
 });
 
 // 注册一些逻辑

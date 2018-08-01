@@ -82,7 +82,7 @@
                                     </td>
                                     <td width="84" align="left">{{item.sell_price}}</td>
                                     <td width="104" align="center">
-                                        <el-input-number @change="change($event,index)" v-model="item.buycount" size="mini" :min="1" :max="10" label="描述文字"></el-input-number>
+                                        <el-input-number @change="change($event,index)" v-model="item.buycount" size="mini" :min="1"  label="描述文字"></el-input-number>
                                     </td>
                                     <td width="104" align="left">{{item.buycount*item.sell_price}}</td>
                                     <td width="54" align="center">
@@ -105,9 +105,12 @@
                     <div class="cart-foot clearfix">
                         <div class="right-box">
                             <button class="button" onclick="javascript:location.href='/index.html';">继续购物</button>
-                            <router-link to="/payOrder">
+                            <!-- <router-link to="/payOrder">
                                 <button class="submit">立即结算</button>
-                            </router-link>
+                            </router-link> -->
+                            <!-- 需要带上数据过去 所以使用点击事件 router.push 进行跳转 -->
+                            <button @click="toPayOrder" class="submit">立即结算</button>
+
                         </div>
                     </div>
                     <!--购物车底部-->
@@ -134,7 +137,7 @@ export default {
     }
     // 最后多了一个 ,
     ids = ids.slice(0, -1);
-    // console.log(ids);
+    // // console.log(ids);
     // 购物车的数据 id:num
     this.axios
       .get(`site/comment/getshopcargoods/${ids}`)
@@ -150,7 +153,7 @@ export default {
         this.message = response.data.message;
       })
       .catch(err => {
-        console.log(err);
+        // console.log(err);
       });
   },
   // 计算属性
@@ -176,7 +179,7 @@ export default {
   },
   methods: {
     change(num, index) {
-      //   console.log(num,index);
+      //   // console.log(num,index);
       this.$store.commit("changeNum", {
         goodId: this.message[index].id,
         goodNum: num
@@ -194,11 +197,11 @@ export default {
             type: "success",
             message: "删除成功!"
           });
-        //   console.log(index);
-        // 删除vuex
-        this.$store.commit('delGoodById',this.message[index].id);
-        // 删除本组件
-        this.message.splice(index,1);
+          //   // console.log(index);
+          // 删除vuex
+          this.$store.commit("delGoodById", this.message[index].id);
+          // 删除本组件
+          this.message.splice(index, 1);
         })
         .catch(() => {
           this.$message({
@@ -206,6 +209,31 @@ export default {
             message: "已取消删除"
           });
         });
+    },
+    // 点击跳转
+    toPayOrder(){
+        // 获取选中的id
+        let ids = '';
+        // 拼接为 id1,id2,id3....
+        this.message.forEach(v=>{
+            if(v.isSelected){
+                ids+=v.id;
+                ids+=','
+            }
+        })
+        if(ids==''){
+            // 一个都没选
+            this.$message({
+                message:'哥们,你起码选一个呀!!',
+                duration:1000
+            });
+            return;
+        }
+        // 切掉,
+       ids = ids.slice(0,-1);
+        // 跳转地址
+        this.$router.push('/payOrder/'+ids);
+        
     }
   }
 };

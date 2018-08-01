@@ -122,7 +122,7 @@ export default {
   },
   // 即将显示时调用
   beforeMount() {
-    // console.log('即将要显示了哦');
+    // // console.log('即将要显示了哦');
     // 获取 顶部的数据
     this.axios
       .get(`/site/goods/gettopdata/goods`)
@@ -133,13 +133,13 @@ export default {
         this.toplist = response.data.message.toplist;
       })
       .catch(error => {
-        // console.log(error);
+        // // console.log(error);
     });
     
     // 获取底部的商品列表数据
     this.axios.get(`/site/goods/getgoodsgroup`)
     .then((response)=>{
-        console.log(response);
+        // console.log(response);
         this.goodList = response.data.message;
     })
     .catch(response=>{
@@ -153,18 +153,18 @@ export default {
   },
   // 显示出来调用
   mounted() {
-    // console.log('index 显示了哦');
+    // // console.log('index 显示了哦');
     // axios.get("http://47.106.148.205:8899/site/goods/gettopdata/goods")
     // .then((response)=>{
-    //     console.log(response);
+    //     // console.log(response);
     // })
     // .catch((error)=>{
-    //     console.log(error);
+    //     // console.log(error);
     // })
   },
 created(){
-    console.log('index组件');
-      console.log(this.$store);
+    // console.log('index组件');
+      // console.log(this.$store);
   }
 };
 </script>

@@ -226,7 +226,7 @@ export default {
           });
         })
         .catch(err => {
-          // console.log(err);
+          // // console.log(err);
         });
     },
     // 抽取的公共方法 获取评论信息
@@ -241,17 +241,17 @@ export default {
           }&pageSize=${this.pageSize}`
         )
         .then(response => {
-          //   console.log(response);
+          //   // console.log(response);
           this.messageList = response.data.message;
           this.totalCount = response.data.totalcount;
         })
         .catch(err => {
-          console.log(err);
+          // console.log(err);
         });
     },
     // 页码改变
     pageChange(page) {
-      console.log(page);
+      // console.log(page);
       // 保存起来
       this.pageIndex = page;
       // 重新获取数据
@@ -259,7 +259,7 @@ export default {
     },
     // 页容量改变
     pageSizeChange(size) {
-      console.log(size);
+      // console.log(size);
       this.pageSize = size;
       // 重新获取数据
       this.getcomments();
@@ -287,7 +287,7 @@ export default {
           commenttxt:this.commentContent
       }).
       then(response=>{
-        //   console.log(response)
+        //   // console.log(response)
         if(response.data.status==0){
             // 成功了
             // 提示用户
@@ -298,7 +298,7 @@ export default {
             this.getcomments();
         }
       }).catch(err=>{
-        //   console.log(err);
+        //   // console.log(err);
       })
       // 清空评论
       this.commentContent='';
@@ -315,7 +315,7 @@ export default {
         let offset = $('#buyButton .add').offset();
         // 获取购物车的位置
         let cartOffset = $('.icon-cart').offset();
-        // console.log(offset);// top left
+        // // console.log(offset);// top left
         $('.moveImg').show().addClass('move').css(offset).animate(cartOffset,1000,()=>{
             $('.moveImg').removeClass('move').hide();
         });
@@ -333,7 +333,7 @@ export default {
   // 在实例初始化之后，数据观测 (data observer) 和 event/watcher 事件配置之前被调用。
   // 这个生命周期函数中 data methods 中的那些值 还没有设置给 这个组件对象
   beforeCreate() {
-    //   console.log(this);
+    //   // console.log(this);
     //   this.getgoodsInfo();
   },
   // 在实例创建完成后被立即调用。
@@ -343,8 +343,8 @@ export default {
     // 获取评论信息
     this.getcomments();
     // 打印vuex的值
-    console.log('goodsinfo组件')
-    console.log(this.$store);
+    // console.log('goodsinfo组件')
+    // console.log(this.$store);
   },
   // beforeMount
   beforeMount() {},
