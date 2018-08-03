@@ -40,7 +40,7 @@
                     </div>
                     <!--购物车头部-->
                     <div class="cart-box">
-                        <el-form status-icon :model="orderInfo"  ref="orderInfo" :rules="rules" label-width="100px" class="demo-ruleForm">
+                        <el-form status-icon :model="orderInfo" ref="orderInfo" :rules="rules" label-width="100px" class="demo-ruleForm">
                             <h2 class="slide-tit">
                                 <span>1、收货地址</span>
                             </h2>
@@ -305,31 +305,33 @@ export default {
     },
     // 提交数据之前的最后一次校验
     submitForm(formName) {
+      // 最终验证一下表单
       this.$refs[formName].validate(valid => {
         if (valid) {
-        //   alert("submit!");
-        // 调用接口
-        this.axios.post('/site/validate/order/setorder',this.orderInfo)
-        .then(response=>{
-            // console.log(response);
-            // 订单创建成功之后
-            // 删除数据 id1,id2,id3,id4...
-            // 截取字符串 切断
-            let idArr = this.orderInfo.goodsids.split(',');
-            // // console.log(idArr);["88", "90", "94", "95"]
-            idArr.forEach(v=>{
+          //   alert("submit!");
+          // 调用接口
+          this.axios
+            .post("/site/validate/order/setorder", this.orderInfo)
+            .then(response => {
+              // console.log(response);
+              // 订单创建成功之后
+              // 删除数据 id1,id2,id3,id4...
+              // 截取字符串 切断
+              let idArr = this.orderInfo.goodsids.split(",");
+              // // console.log(idArr);["88", "90", "94", "95"]
+              idArr.forEach(v => {
                 // 通知vuex删除对应的数据
-                this.$store.commit('delGoodById',v);
+                this.$store.commit("delGoodById", v);
+              });
+              // 代码跳转 订单id
+              this.$router.push("/orderInfo/" + response.data.message.orderid);
             })
-            // 代码跳转
-            this.$router.push('/orderInfo/'+response.data.message.orderid);
-        })
-        .catch(err=>{
-            // console.log(err);
-        })
+            .catch(err => {
+              // console.log(err);
+            });
         } else {
-        //   // console.log("error submit!!");
-        this.$Message.error('哥们,有数据没填呢,检查一下呗!!')
+          //   // console.log("error submit!!");
+          this.$Message.error("哥们,有数据没填呢,检查一下呗!!");
           return false;
         }
       });
